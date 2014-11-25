@@ -1,0 +1,17 @@
+Steps to debug:
+
+0. Read through the whole thing.
+
+1. Make sure that the first function apply_optimizer is working as expected. Test it by calling it with different combinations of optimizers and functions as input. Seems good.
+
+2. Seeing that compare_optimizers calls bench_optimizer, read/work through the parts of compare_optimizers that don't need bench_optimizer first.
+
+3. Weird inconsistent use of "optimizers" in compare_optimizers input argument and global "OPTIMIZERS" in actual code. Change "OPTIMIZERS" to "optimizers" in code, so that we can input the global optimizers we want to the function. Also use of global "FUNCTIONS" in code, so changed that to input "functions," so that we can input the global functions we want.
+
+4. Tried a test run of compare_optimizers(OPTIMIZERS,FUNCTIONS), but an error occurs in the return line of bench_optimizer.
+
+5. I have no idea what kind of nonsense you get from writing a for loop with nothing in it below the thing you are actually trying to loop over, so I rewrote this and made it do/return what it is supposed to. Also, after doing this, there was initially an error about not being able to add tuples and ints, so then I changed apply_optimizer to return an int instead of a tuple.
+
+6. After fixing the for loop nonsense, I tried another test run of compare_optimizers(OPTIMIZERS,FUNCTIONS), but got a legit result only for the first optimizer with zero total function calls for the rest. Not sure why so I tried to change the order of the optimizers in OPTIMIZERS and saw that the first optimizer always produces a legit result while the rest produce zero, no matter which optimizer was first. So something must have been going wrong/missing in the for loop...
+
+7. I tried using pdb to step through compare_optimizers(OPTIMIZERS,FUNCTIONS), printing ncalls, optimizer, param_grid within each iteration of the for loop, but everything seemed good, except that I had no real idea of what the output of print param_grid meant. So I figured there must be something wrong with that lol. I moved that line into the for loop and suddenly everything magically worked. Don't get why it should matter, but yay! 
